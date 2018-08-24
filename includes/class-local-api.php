@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 /**
  * API class
  */
-class WavesApi
+class LocalApi
 {
 
     private $address;
@@ -18,7 +18,7 @@ class WavesApi
     public function __construct($address)
     {
         $this->address = $address;
-        $this->url = 'https://nodes.wavesnodes.com/';
+        $this->url = 'http://185.181.164.136:6861';
     }
 
     private function get( $endpoint )
@@ -38,7 +38,7 @@ class WavesApi
     function findByDestinationTag($dt)
     {
         $attachment = $dt;
-       
+
         $result = $this->get('transactions/address/' . $this->address. '/limit/50');
         if ($result) {
             $result_encoded = json_encode($result);

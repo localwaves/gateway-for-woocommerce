@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 /**
  * Ajax class
  */
-class WavesAjax
+class LocalAjax
 {
 
     private static $instance;
@@ -27,20 +27,20 @@ class WavesAjax
 
     public function init()
     {
-        add_action('wp_ajax_check_waves_payment', array(__CLASS__, 'checkWavesPayment'));
+        add_action('wp_ajax_check_local_payment', array(__CLASS__, 'checkLocalPayment'));
     }
 
-    public function checkWavesPayment()
+    public function checkLocalPayment()
     {
         global $woocommerce;
         $woocommerce->cart->get_cart();
 
-        $options = get_option('woocommerce_waves_settings');
+        $options = get_option('woocommerce_local_settings');
 
-        $payment_total   = WC()->session->get('waves_payment_total');
-        $destination_tag = WC()->session->get('waves_destination_tag');
+        $payment_total   = WC()->session->get('local_payment_total');
+        $destination_tag = WC()->session->get('local_destination_tag');
 
-        $ra     = new WavesApi($options['address']);
+        $ra     = new LocalApi($options['address']);
         $result = $ra->findByDestinationTag($destination_tag);
 
         $result['match'] = ($result['amount'] == $payment_total ) ? true : false;
@@ -49,6 +49,6 @@ class WavesAjax
         exit();
     }
 
-} 
+}
 
-WavesAjax::getInstance();
+LocalAjax::getInstance();

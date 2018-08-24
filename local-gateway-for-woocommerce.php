@@ -1,20 +1,7 @@
 <?php
 
 /**
- * Waves Gateway for Woocommerce
- *
- * Plugin Name: WNET Gateway for Woocommerce (also for other Waves assets)
- * Plugin URI: https://github.com/wavesnode/gateway-for-woocommerce/
- * Description: Show prices in Waves (or asset) and accept Waves payments in your woocommerce webshop
- * Version: 0.4.4
- * Author: Wavesnode.NET / Useless Waves Token
- * Author URI:   https://wavesnode.net/blog/waves-woocommerce-gateway/
- * License: GPLv2 or later
- * License URI: http://www.opensource.org/licenses/gpl-license.php
- * Text Domain: waves-gateway-for-woocommerce
- * Domain Path: /languages/
-  *
- * Copyright 2018 Wavesnode.NET / Copyright 2017 Useless Waves Token Foundation
+ * Copyright 2018 Localwaves.xyz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,9 +22,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists('WcWaves')) {
+if (!class_exists('WcLocal')) {
 
-    class WcWaves
+    class WcLocal
     {
 
         private static $instance;
@@ -53,7 +40,7 @@ if (!class_exists('WcWaves')) {
         	self::$plugin_url = plugin_dir_url(self::$plugin_basename);
             add_action('plugins_loaded', array($this, 'init'));
         }
-        
+
         public static function getInstance()
         {
             if (null === self::$instance) {
@@ -74,7 +61,7 @@ if (!class_exists('WcWaves')) {
                 return;
             }
 
-            if (class_exists('WC_Waves_Gateway')) {
+            if (class_exists('WC_Local_Gateway')) {
 	            return;
 	        }
 
@@ -85,33 +72,33 @@ if (!class_exists('WcWaves')) {
 	        include_once plugin_basename('includes/base58/src/ServiceInterface.php');
 	        include_once plugin_basename('includes/base58/src/GMPService.php');
 	        include_once plugin_basename('includes/base58/src/BCMathService.php');
-	        include_once plugin_basename('includes/class-waves-gateway.php');
-	        include_once plugin_basename('includes/class-waves-api.php');
-	        include_once plugin_basename('includes/class-waves-exchange.php');
-	        include_once plugin_basename('includes/class-waves-settings.php');
-	        include_once plugin_basename('includes/class-waves-ajax.php');
+	        include_once plugin_basename('includes/class-local-gateway.php');
+	        include_once plugin_basename('includes/class-local-api.php');
+	        include_once plugin_basename('includes/class-local-exchange.php');
+	        include_once plugin_basename('includes/class-local-settings.php');
+	        include_once plugin_basename('includes/class-local-ajax.php');
 
 	        add_filter('woocommerce_payment_gateways', array($this, 'addToGateways'));
-            add_filter('woocommerce_currencies', array($this, 'WavesCurrencies'));
-            add_filter('woocommerce_currency_symbol', array($this, 'WavesCurrencySymbols'), 10, 2);
+            add_filter('woocommerce_currencies', array($this, 'LocalCurrencies'));
+            add_filter('woocommerce_currency_symbol', array($this, 'LocalCurrencySymbols'), 10, 2);
 
-	        add_filter('woocommerce_get_price_html', array($this, 'WavesFilterPriceHtml'), 10, 2);
-	        add_filter('woocommerce_cart_item_price', array($this, 'WavesFilterCartItemPrice'), 10, 3);
-	        add_filter('woocommerce_cart_item_subtotal', array($this, 'WavesFilterCartItemSubtotal'), 10, 3);
-	        add_filter('woocommerce_cart_subtotal', array($this, 'WavesFilterCartSubtotal'), 10, 3);
-	        add_filter('woocommerce_cart_totals_order_total_html', array($this, 'WavesFilterCartTotal'), 10, 1);
+	        add_filter('woocommerce_get_price_html', array($this, 'LocalFilterPriceHtml'), 10, 2);
+	        add_filter('woocommerce_cart_item_price', array($this, 'LocalFilterCartItemPrice'), 10, 3);
+	        add_filter('woocommerce_cart_item_subtotal', array($this, 'LocalFilterCartItemSubtotal'), 10, 3);
+	        add_filter('woocommerce_cart_subtotal', array($this, 'LocalFilterCartSubtotal'), 10, 3);
+	        add_filter('woocommerce_cart_totals_order_total_html', array($this, 'LocalFilterCartTotal'), 10, 1);
 
 	    }
 
 	    public static function addToGateways($gateways)
 	    {
-	        $gateways['waves'] = 'WcWavesGateway';
+	        $gateways['local'] = 'WcLocalGateway';
 	        return $gateways;
 	    }
 
-        public function WavesCurrencies( $currencies )
+        public function LocalCurrencies( $currencies )
         {
-            $currencies['WAVES'] = __( 'Waves', 'waves' );
+            $currencies['LOCAL'] = __( 'Local', 'local' );
             $currencies['WNET'] = __( 'Wavesnode.NET', 'wnet' );
             $currencies['ARTcoin'] = __( 'ARTcoin', 'ARTcoin' );
             $currencies['POL'] = __( 'POLTOKEN.PL', 'POL' );
@@ -122,9 +109,9 @@ if (!class_exists('WcWaves')) {
             return $currencies;
         }
 
-        public function WavesCurrencySymbols( $currency_symbol, $currency ) {
+        public function LocalCurrencySymbols( $currency_symbol, $currency ) {
             switch( $currency ) {
-                case 'WAVES': $currency_symbol = 'WAVES'; break;
+                case 'LOCAL': $currency_symbol = 'LOCAL'; break;
                 case 'WNET': $currency_symbol = 'WNET'; break;
                 case 'ARTcoin': $currency_symbol = 'ARTcoin'; break;
                 case 'POL': $currency_symbol = 'POL'; break;
@@ -136,48 +123,48 @@ if (!class_exists('WcWaves')) {
             return $currency_symbol;
         }
 
-	    public function WavesFilterCartTotal($value)
+	    public function LocalFilterCartTotal($value)
 	    {
-	        return $this->convertToWavesPrice($value, WC()->cart->total);
+	        return $this->convertToLocalPrice($value, WC()->cart->total);
 	    }
 
-	    public function WavesFilterCartItemSubtotal($cart_subtotal, $compound, $that)
+	    public function LocalFilterCartItemSubtotal($cart_subtotal, $compound, $that)
 	    {
-	        return $this->convertToWavesPrice($cart_subtotal, $that->subtotal);
+	        return $this->convertToLocalPrice($cart_subtotal, $that->subtotal);
 	    }
 
-	    public function WavesFilterPriceHtml($price, $that)
+	    public function LocalFilterPriceHtml($price, $that)
 	    {
-	        return $this->convertToWavesPrice($price, $that->price);
+	        return $this->convertToLocalPrice($price, $that->price);
 	    }
 
-	    public function WavesFilterCartItemPrice($price, $cart_item, $cart_item_key)
+	    public function LocalFilterCartItemPrice($price, $cart_item, $cart_item_key)
 	    {
 	        $item_price = ($cart_item['line_subtotal'] + $cart_item['line_subtotal_tax']) / $cart_item['quantity'];
-	        return $this->convertToWavesPrice($price,$item_price);
+	        return $this->convertToLocalPrice($price,$item_price);
 	    }
 
-	    public function WavesFilterCartSubtotal($price, $cart_item, $cart_item_key)
+	    public function LocalFilterCartSubtotal($price, $cart_item, $cart_item_key)
 	    {
 	        $subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
-	        return $this->convertToWavesPrice($price, $subtotal);
+	        return $this->convertToLocalPrice($price, $subtotal);
 	    }
 
-	    private function convertToWavesPrice($price_string, $price)
+	    private function convertToLocalPrice($price_string, $price)
 	    {
-            $options = get_option('woocommerce_waves_settings');
-            if(!in_array(get_woocommerce_currency(), array("WAVES","WNET","ARTcoin","POL","Wykop Coin","Surfcash","TN","Ecop")) && $options['show_prices'] == 'yes') {
-                $waves_currency = $options['asset_code'];
-                if(empty($waves_currency)) {
-                    $waves_currency = 'Waves';
+            $options = get_option('woocommerce_local_settings');
+            if(!in_array(get_woocommerce_currency(), array("LOCAL","WNET","ARTcoin","POL","Wykop Coin","Surfcash","TN","Ecop")) && $options['show_prices'] == 'yes') {
+                $local_currency = $options['asset_code'];
+                if(empty($local_currency)) {
+                    $local_currency = 'Local';
                 }
-                $waves_assetId = $options['asset_id'];
-                if(empty($waves_assetId)) {
-                    $waves_assetId = null;
+                $local_assetId = $options['asset_id'];
+                if(empty($local_assetId)) {
+                    $local_assetId = null;
                 }
-                $waves_price = WavesExchange::convertToAsset(get_woocommerce_currency(), $price,$waves_assetId);
-                if ($waves_price) {
-                    $price_string .= '&nbsp;(<span class="woocommerce-price-amount amount">' . $waves_price . '&nbsp;</span><span class="woocommerce-price-currencySymbol">'.$waves_currency.')</span>';
+                $local_price = LocalExchange::convertToAsset(get_woocommerce_currency(), $price,$local_assetId);
+                if ($local_price) {
+                    $price_string .= '&nbsp;(<span class="woocommerce-price-amount amount">' . $local_price . '&nbsp;</span><span class="woocommerce-price-currencySymbol">'.$local_currency.')</span>';
                 }
             }
 	        return $price_string;
@@ -186,10 +173,10 @@ if (!class_exists('WcWaves')) {
 
 }
 
-WcWaves::getInstance();
+WcLocal::getInstance();
 
-function wavesGateway_textdomain() {
-    load_plugin_textdomain( 'waves-gateway-for-woocommerce', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+function localGateway_textdomain() {
+    load_plugin_textdomain( 'local-gateway-for-woocommerce', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
 }
-        
-add_action( 'plugins_loaded', 'wavesGateway_textdomain' );
+
+add_action( 'plugins_loaded', 'localGateway_textdomain' );

@@ -1,9 +1,9 @@
-.waves-address, .waves-amount{
+.local-address, .local-amount{
 	display: block;
 	text-align: center;
 	margin: 0 !important;
 }
-.waves-label{
+.local-label{
 	display: block;
 	text-align: center;
 	font-size: 80%;
@@ -13,18 +13,18 @@
 	display:block;
 	margin-top: 1em;
 }
-.waves-logo{
+.local-logo{
 	margin: 0 auto;
 }
-.waves-container{
+.local-container{
 	text-align: center;
 }
-.waves-description{
+.local-description{
 	font-size: 80%;
 	text-align: center;
 }
 
-#waves-qr-code{
+#local-qr-code{
 	display: block;
 	width: 208px;
 	height: 208px;

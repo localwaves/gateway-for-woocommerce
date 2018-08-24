@@ -3,17 +3,17 @@
 	var allow_button_click = false;
 	var countdown = 0;
 
-    var waves = {
+    var local = {
     	reset: function () {
 
     	},
         init: function () {
-        		
-        	$.initialize("#waves-form", function() {
-	    		$("#waves-qr-code").qrcode( {
+
+        	$.initialize("#local-form", function() {
+	    		$("#local-qr-code").qrcode( {
 					    width: 200,
 					    height: 200,
-					    text: $("#waves-qr-code").data('contents')
+					    text: $("#local-qr-code").data('contents')
 					}
 	    		);
 
@@ -27,12 +27,12 @@
 			        },300);
 			        return false;
 			    });
-			   
-				countdown = $('.waves-countdown').data('minutes') * 60 * 1000;
-			
+
+				countdown = $('.local-countdown').data('minutes') * 60 * 1000;
+
                 // ignore button presses while waiting
                 $('#place_order').on( 'click',function () {
-                    if($( '#waves-form' ).is(':visible') && allow_button_click == false){
+                    if($( '#local-form' ).is(':visible') && allow_button_click == false){
 	                    return false;
 	                }
                 });
@@ -43,12 +43,12 @@
         checkForPayment: function(){
         	check_count++;
             $.ajax({
-                url: waves_vars.wc_ajax_url,
+                url: local_vars.wc_ajax_url,
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    action: 'check_waves_payment',
-                    nonce: waves_vars.nonce
+                    action: 'check_local_payment',
+                    nonce: local_vars.nonce
                 }
             }).done(function (res) {
                 console.log("Match: " + res);
@@ -59,33 +59,33 @@
                     return;
                 }
                 setTimeout(function() {
-                    waves.checkForPayment();
+                    local.checkForPayment();
                 }, 3000);
             });
         },
     }
 
-    waves.init();
+    local.init();
 
     setTimeout(function() {
-        waves.checkForPayment();
+        local.checkForPayment();
     }, 3000);
 
     setInterval(function(){
 		countdown -= 1000;
-		
+
 		var minutes = Math.floor(countdown / (60 * 1000));
-		var seconds = Math.floor((countdown - (minutes * 60 * 1000)) / 1000);  
+		var seconds = Math.floor((countdown - (minutes * 60 * 1000)) / 1000);
 
 		if (countdown <= 0) {
-			if($( '#waves-form' ).is(':visible')){
+			if($( '#local-form' ).is(':visible')){
 	            $( 'body' ).trigger( 'update_checkout' );
 	        }
 		} else {
-			$('.waves-countdown').html(minutes + ":" + (seconds < 10 ? 0 : '') + seconds);
+			$('.local-countdown').html(minutes + ":" + (seconds < 10 ? 0 : '') + seconds);
 		}
 
-	}, 1000); 
+	}, 1000);
 
 
 })( jQuery );

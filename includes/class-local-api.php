@@ -38,7 +38,7 @@ class LocalApi
     function findByDestinationTag($dt)
     {
         $attachment = $dt;
-
+       
         $result = $this->get('transactions/address/' . $this->address. '/limit/50');
         if ($result) {
             $result_encoded = json_encode($result);

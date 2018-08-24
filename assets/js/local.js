@@ -8,7 +8,7 @@
 
     	},
         init: function () {
-
+        		
         	$.initialize("#local-form", function() {
 	    		$("#local-qr-code").qrcode( {
 					    width: 200,
@@ -27,9 +27,9 @@
 			        },300);
 			        return false;
 			    });
-
+			   
 				countdown = $('.local-countdown').data('minutes') * 60 * 1000;
-
+			
                 // ignore button presses while waiting
                 $('#place_order').on( 'click',function () {
                     if($( '#local-form' ).is(':visible') && allow_button_click == false){
@@ -73,9 +73,9 @@
 
     setInterval(function(){
 		countdown -= 1000;
-
+		
 		var minutes = Math.floor(countdown / (60 * 1000));
-		var seconds = Math.floor((countdown - (minutes * 60 * 1000)) / 1000);
+		var seconds = Math.floor((countdown - (minutes * 60 * 1000)) / 1000);  
 
 		if (countdown <= 0) {
 			if($( '#local-form' ).is(':visible')){
@@ -85,7 +85,7 @@
 			$('.local-countdown').html(minutes + ":" + (seconds < 10 ? 0 : '') + seconds);
 		}
 
-	}, 1000);
+	}, 1000); 
 
 
 })( jQuery );

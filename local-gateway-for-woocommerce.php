@@ -1,7 +1,20 @@
 <?php
 
 /**
- * Copyright 2018 Localwaves.xyz
+ * Local Gateway for Woocommerce
+ *
+ * Plugin Name: Local Gateway for Woocommerce (also for other Local assets)
+ * Plugin URI: https://github.com/wavesnode/gateway-for-woocommerce/
+ * Description: Show prices in Local (or asset) and accept Local payments in your woocommerce webshop
+ * Version: 0.4.4
+ * Author: localwaves.xyz
+ * Author URI:   https://wavesnode.net/blog/waves-woocommerce-gateway/
+ * License: GPLv2 or later
+ * License URI: http://www.opensource.org/licenses/gpl-license.php
+ * Text Domain: local-gateway-for-woocommerce
+ * Domain Path: /languages/
+  *
+ * Copyright 2018 localwaves.xyz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +53,7 @@ if (!class_exists('WcLocal')) {
         	self::$plugin_url = plugin_dir_url(self::$plugin_basename);
             add_action('plugins_loaded', array($this, 'init'));
         }
-
+        
         public static function getInstance()
         {
             if (null === self::$instance) {
@@ -99,7 +112,7 @@ if (!class_exists('WcLocal')) {
         public function LocalCurrencies( $currencies )
         {
             $currencies['LOCAL'] = __( 'Local', 'local' );
-            $currencies['WNET'] = __( 'Wavesnode.NET', 'wnet' );
+            $currencies['AMUR'] = __( 'Amur', 'amur' );
             $currencies['ARTcoin'] = __( 'ARTcoin', 'ARTcoin' );
             $currencies['POL'] = __( 'POLTOKEN.PL', 'POL' );
             $currencies['Wykop Coin'] = __( 'WYKOP.PL', 'Wykop Coin' );
@@ -112,7 +125,7 @@ if (!class_exists('WcLocal')) {
         public function LocalCurrencySymbols( $currency_symbol, $currency ) {
             switch( $currency ) {
                 case 'LOCAL': $currency_symbol = 'LOCAL'; break;
-                case 'WNET': $currency_symbol = 'WNET'; break;
+                case 'AMUR': $currency_symbol = 'AMUR'; break;
                 case 'ARTcoin': $currency_symbol = 'ARTcoin'; break;
                 case 'POL': $currency_symbol = 'POL'; break;
                 case 'Wykop Coin': $currency_symbol = 'Wykop Coin'; break;
@@ -153,7 +166,7 @@ if (!class_exists('WcLocal')) {
 	    private function convertToLocalPrice($price_string, $price)
 	    {
             $options = get_option('woocommerce_local_settings');
-            if(!in_array(get_woocommerce_currency(), array("LOCAL","WNET","ARTcoin","POL","Wykop Coin","Surfcash","TN","Ecop")) && $options['show_prices'] == 'yes') {
+            if(!in_array(get_woocommerce_currency(), array("LOCAL","AMUR","ARTcoin","POL","Wykop Coin","Surfcash","TN","Ecop")) && $options['show_prices'] == 'yes') {
                 $local_currency = $options['asset_code'];
                 if(empty($local_currency)) {
                     $local_currency = 'Local';
@@ -178,5 +191,5 @@ WcLocal::getInstance();
 function localGateway_textdomain() {
     load_plugin_textdomain( 'local-gateway-for-woocommerce', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
 }
-
+        
 add_action( 'plugins_loaded', 'localGateway_textdomain' );

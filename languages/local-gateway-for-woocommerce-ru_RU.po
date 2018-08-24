@@ -19,8 +19,8 @@ msgid "https://uwtoken.com"
 msgstr "https://uwtoken.com"
 
 #. Author of the plugin
-msgid "John Doe / Useless Waves Token"
-msgstr "John Doe / Useless Waves Token"
+msgid "John Doe / Useless Local Token"
+msgstr "John Doe / Useless Local Token"
 
 #: includes/class-local-gateway.php:25
 msgid "Awaiting transfer.."

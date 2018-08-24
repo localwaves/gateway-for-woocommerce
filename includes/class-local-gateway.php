@@ -28,15 +28,15 @@ class WcLocalGateway extends WC_Payment_Gateway
         $this->order_button_text 	= __('Awaiting transfer..','local-gateway-for-woocommerce');
         $this->has_fields 			= true;
 
-        // assetCode+id if woocommerce_currency is set to Local-like currency
-        $this->currencyIsLocal = in_array(get_woocommerce_currency(), array("LOCAL","WNET","ARTcoin","POL","Wykop Coin","Surfcash","TN","Ecop"));
+        // assetCode+id if woocommerce_currency is set to Waves-like currency
+        $this->currencyIsLocal = in_array(get_woocommerce_currency(), array("LOCAL","AMUR","ARTcoin","POL","Wykop Coin","Surfcash","TN","Ecop"));
         if($this->currencyIsLocal) {
             if (get_woocommerce_currency() == "Local") {
                 $this->assetCode = 'Local';
                 $this->assetId = null;
-            } else if (get_woocommerce_currency() == "WNET") {
-                $this->assetCode = 'WNET';
-                $this->assetId = 'AxAmJaro7BJ4KasYiZhw7HkjwgYtt2nekPuF2CN9LMym';
+            } else if (get_woocommerce_currency() == "AMUR") {
+                $this->assetCode = 'AMUR';
+                $this->assetId = '91khdgiSyLaT37xg7kuXT2qfYUKSbpCDvBGjHGdvz4uc';
             } else if (get_woocommerce_currency() == "ARTcoin") {
                 $this->assetCode = 'ARTcoin';
                 $this->assetId = 'GQe2a2uReaEiHLdjzC8q4Popr9tnKonEpcaihEoZrNiR';
@@ -77,7 +77,7 @@ class WcLocalGateway extends WC_Payment_Gateway
         ));
         add_action('wp_enqueue_scripts', array($this, 'paymentScripts'));
 
-        add_action('woocommerce_thankyou_' . $this->id, array($this, 'thankyouPage'));
+        add_action('woocommerce_thankyou_' . $this->id, array($this, 'thankyouPage'));        
 
     }
 
@@ -92,7 +92,7 @@ class WcLocalGateway extends WC_Payment_Gateway
     	// sha1( get_bloginfo() )
         parent::init_settings();
     }
-
+   
     public function payment_fields()
     {
     	global $woocommerce;
@@ -103,14 +103,14 @@ class WcLocalGateway extends WC_Payment_Gateway
             $total_converted = LocalExchange::convertToAsset(get_woocommerce_currency(), $total_converted,$this->assetId);
             $rate = $total_converted / $this->get_order_total();
         }
-
+		
 		// Set decimals for tokens other than default value 8
 		if (get_woocommerce_currency() == "Ecop") {
 		$total_local = $total_converted * 100000;
-		}
+		} 
 		else if (get_woocommerce_currency() == "Surfcash") {
 		$total_local = $total_converted * 100;
-		}
+		} 
 		else if (get_woocommerce_currency() == "TN") {
 		$total_local = $total_converted * 100;
 		}
@@ -122,7 +122,7 @@ class WcLocalGateway extends WC_Payment_Gateway
         $destination_tag = hexdec( substr(sha1(current_time(timestamp,1) . key ($woocommerce->cart->cart_contents )  ), 0, 7) );
         $base58 = new StephenHill\Base58();
         $destination_tag_encoded = $base58->encode(strval($destination_tag));
-        // set session data
+        // set session data 
         WC()->session->set('local_payment_total', $total_local);
         WC()->session->set('local_destination_tag', $destination_tag_encoded);
         WC()->session->set('local_data_hash', sha1( $this->secret . $total_converted ));
@@ -193,17 +193,17 @@ class WcLocalGateway extends WC_Payment_Gateway
         <?
     }
 
-    public function process_payment( $order_id )
+    public function process_payment( $order_id ) 
     {
     	global $woocommerce;
         $this->order = new WC_Order( $order_id );
-
+        
 	    $payment_total   = WC()->session->get('local_payment_total');
         $destination_tag = WC()->session->get('local_destination_tag');
 
-	    $ra = new localApi($this->address);
+	    $ra = new LocalApi($this->address);
 	    $transaction = $ra->getTransaction( $_POST['tx_hash']);
-
+	    
         if($transaction->attachment != $destination_tag) {
 	    	exit('destination');
 	    	return array(
@@ -211,25 +211,25 @@ class WcLocalGateway extends WC_Payment_Gateway
 		        'messages' 	=> 'attachment mismatch'
 		    );
 	    }
-
+		
 		if($transaction->assetId != $this->assetId ) {
 			return array(
 		        'result'    => 'failure',
 		        'messages' 	=> 'Wrong Asset'
 		    );
 		}
-
+		
 	    if($transaction->amount != $payment_total) {
 	    	return array(
 		        'result'    => 'failure',
 		        'messages' 	=> 'amount mismatch'
 		    );
 	    }
-
+	    
         $this->order->payment_complete();
 
         $woocommerce->cart->empty_cart();
-
+	   
         return array(
             'result' => 'success',
             'redirect' => $this->get_return_url($this->order)
@@ -240,7 +240,7 @@ class WcLocalGateway extends WC_Payment_Gateway
     {
         wp_enqueue_script('qrcode', plugins_url('assets/js/jquery.qrcode.min.js', WcLocal::$plugin_basename), array('jquery'), WcLocal::$version, true);
         wp_enqueue_script('initialize', plugins_url('assets/js/jquery.initialize.js', WcLocal::$plugin_basename), array('jquery'), WcLocal::$version, true);
-
+        
         wp_enqueue_script('clipboard', plugins_url('assets/js/clipboard.js', WcLocal::$plugin_basename), array('jquery'), WcLocal::$version, true);
         wp_enqueue_script('woocommerce_local_js', plugins_url('assets/js/local.js', WcLocal::$plugin_basename), array(
             'jquery',

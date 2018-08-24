@@ -22,7 +22,7 @@ class LocalExchange
         $pair = $currency1."/".$currency2;
         $result = wp_cache_get($pair,'exchangePrices');
         if (false === $result ) {
-            $result = LocalExchange::getBodyAsJson("http://marketdata.wavesplatform.com/api/ticker/".$pair);
+            $result = LocaExchange::getBodyAsJson("http://marketdata.wavesplatform.com/api/ticker/".$pair);
             $result = isset($result->{'24h_vwap'})?$result->{'24h_vwap'}:false;
             wp_cache_set( $pair, $result, 'exchangePrices', 3600);
         }

@@ -49,6 +49,6 @@ class LocalAjax
         exit();
     }
 
-}
+} 
 
 LocalAjax::getInstance();

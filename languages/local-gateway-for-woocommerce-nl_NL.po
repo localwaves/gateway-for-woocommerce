@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Waves Gateway for Woocommerce\n"
+"Project-Id-Version: Local Gateway for Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-21 13:48+0000\n"
 "PO-Revision-Date: 2017-07-21 14:06+0000\n"
@@ -13,24 +13,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco - https://localise.biz/"
 
-#: includes/class-waves-gateway.php:25
+#: includes/class-local-gateway.php:25
 msgid "Awaiting transfer.."
 msgstr "Wachten op betaling..."
 
-#: includes/class-waves-gateway.php:94 includes/class-waves-gateway.php:100
-#: includes/class-waves-gateway.php:105
+#: includes/class-local-gateway.php:94 includes/class-local-gateway.php:100
+#: includes/class-local-gateway.php:105
 msgid "copied"
 msgstr "gekopieerd "
 
-#: includes/class-waves-gateway.php:99
+#: includes/class-local-gateway.php:99
 msgid "destination address"
 msgstr "Ontvanger "
 
-#: includes/class-waves-gateway.php:104
+#: includes/class-local-gateway.php:104
 msgid "attachment"
 msgstr "bijlage (attachment)"
 
-#: includes/class-waves-gateway.php:113
+#: includes/class-local-gateway.php:113
 #, php-format
 msgid ""
 "Send a payment of exactly %s to the address above (click the links to copy "
@@ -41,12 +41,12 @@ msgstr ""
 "om te kopiëren of scan de QR code). De pagina wordt ververst als de betaling "
 "ontvangen is. "
 
-#: includes/class-waves-gateway.php:114
+#: includes/class-local-gateway.php:114
 #, php-format
 msgid "Please send your payment within %s."
 msgstr "Verstuur de betaling binnen %s."
 
-#: includes/class-waves-gateway.php:115
+#: includes/class-local-gateway.php:115
 msgid ""
 "When the timer reaches 0 this form will refresh and update the attachment as "
 "well as the total amount using the latest conversion rate."
@@ -54,55 +54,55 @@ msgstr ""
 "Zodra de timer is afgelopen zal dit formulier verversen en de bedragen en de "
 "attachment bijwerken aan de hand van de meest recente wisselkoers."
 
-#: includes/class-waves-settings.php:22
+#: includes/class-local-settings.php:22
 msgid "Enable/Disable"
 msgstr "Inschakelen/Uitschakelen"
 
-#: includes/class-waves-settings.php:24
-msgid "Enable Waves payments"
-msgstr "Waves betalingen inschakelen"
+#: includes/class-local-settings.php:24
+msgid "Enable Local payments"
+msgstr "Local betalingen inschakelen"
 
-#: includes/class-waves-settings.php:28
+#: includes/class-local-settings.php:28
 msgid "Title"
 msgstr "Titel "
 
-#: includes/class-waves-settings.php:30
+#: includes/class-local-settings.php:30
 msgid "This controls the title which the user sees during checkout."
 msgstr "Dit bepaalt de titel die wordt weergegeven op de afrekenpagina. "
 
-#: includes/class-waves-settings.php:31
-msgid "Pay with WAVES"
-msgstr "Betaal met WAVES"
+#: includes/class-local-settings.php:31
+msgid "Pay with LOCAL"
+msgstr "Betaal met LOCAL"
 
-#: includes/class-waves-settings.php:35
+#: includes/class-local-settings.php:35
 msgid "Customer Message"
 msgstr "Klantbericht"
 
-#: includes/class-waves-settings.php:40
+#: includes/class-local-settings.php:40
 msgid "Destination address"
 msgstr "Ontvangstwallet"
 
-#: includes/class-waves-settings.php:43
+#: includes/class-local-settings.php:43
 msgid "This addresses will be used for receiving funds."
 msgstr "Dit adres wordt gebruikt om betalingen te ontvangen"
 
-#: includes/class-waves-settings.php:46
+#: includes/class-local-settings.php:46
 msgid "Convert prices"
 msgstr "Bedragen omrekenen"
 
-#: includes/class-waves-settings.php:48
-msgid "Add prices in WAVES"
-msgstr "Bedragen in Waves toevoegen"
+#: includes/class-local-settings.php:48
+msgid "Add prices in LOCAL"
+msgstr "Bedragen in Local toevoegen"
 
 #. Name of the plugin
-msgid "Waves Gateway for Woocommerce"
-msgstr "Waves Gateway voor Woocommerce"
+msgid "Local Gateway for Woocommerce"
+msgstr "Local Gateway voor Woocommerce"
 
 #. Description of the plugin
 msgid ""
-"Show prices in WAVES and accept WAVES payments in your woocommerce webshop"
+"Show prices in LOCAL and accept LOCAL payments in your woocommerce webshop"
 msgstr ""
-"Geef de prijzen weer in WAVES en accepteer WAVES betalingen in je "
+"Geef de prijzen weer in LOCAL en accepteer LOCAL betalingen in je "
 "Woocommerce webshop"
 
 #. URI of the plugin
